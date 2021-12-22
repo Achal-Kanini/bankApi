@@ -8,8 +8,10 @@ import urllib.request
 from flask import Flask, request, redirect, jsonify
 from werkzeug.utils import secure_filename
 import csv
+from flask_cors import cross_origin,CORS
 
 app = Flask(__name__)
+CORS(app)
 #api = Api(app)
 
 
@@ -55,9 +57,14 @@ def extract(filename):
 
     dfnew = df.dropna(axis=0, how="all", thresh=None, subset=None, inplace=False)
     dfnew = dfnew.fillna(0)
+
+    dfnew.rename(columns = {'Closing Balance':'ClosingBalance'}, inplace = True)
+    dfnew.rename(columns = {'Withdrawal Amt.':'Withdrawal'}, inplace = True)
+    dfnew.rename(columns = {'Deposit Amt.':'Deposit'}, inplace = True)
+    # dfnew.rename(columns = {'Closing Balance':'ClosingBalance'}, inplace = True)
     # res = dfnew['Date']
     # res['Date'] = df['Date']
-    res = dfnew.to_json(orient='columns')
+    res = dfnew.to_json(orient='records')
 
 
     # print(dfnew)
